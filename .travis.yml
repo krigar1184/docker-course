@@ -1,8 +1,22 @@
 sudo: required
+
 services:
   - docker
+
 before_install:
   - docker build -t krigar1184/docker-react -f Dockerfile.dev .
+
 script:
   - docker run -e CI=true krigar1184/docker-react npm run test
 
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-2"
+  app: "docker-course"
+  env: "DockerCourse-env"
+  bucket_name: "elasticbeanstalk-us-east-2-803441828173"
+  bucket_path: "docker-course"
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
